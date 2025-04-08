@@ -1,66 +1,158 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Blog API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bu proje, Laravel 10.48 ile geliştirilmiş bir Blog API'sidir. Kullanıcıların post paylaşabileceği, güncelleyebileceği, silebileceği ve resim ekleyebileceği bir API'yi içerir. API'de JWT (JSON Web Token) ile kullanıcı doğrulama ve yetkilendirme işlemleri yapılmaktadır.
 
-## About Laravel
+## Kullanılan Teknolojiler
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Laravel 10.48**: PHP framework'ü, MVC yapısı, API geliştirme ve ORM (Eloquent) veritabanı yönetimi için kullanıldı.
+- **MySQL**: Veritabanı yönetimi için kullanıldı.
+- **Postman**: API testleri için kullanıldı.
+- **PHP 8.2**: Uygulama sunucu tarafında kullanılan PHP sürümü.
+- **JWT Token**: Kullanıcı doğrulama ve yetkilendirme işlemleri için kullanıldı.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Özellikler
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Kullanıcı Yönetimi**:
+  - Kullanıcılar kayıt olabilir, giriş yapabilir ve JWT token alabilir.
+  - Kullanıcılar sadece kendi hesaplarını silebilir ve güncelleyebilirler.
+  - Kullanıcılar yalnızca kendi oluşturdukları postları silebilir ve güncelleyebilirler.
 
-## Learning Laravel
+- **Post Yönetimi**:
+  - Kullanıcılar, kendi hesaplarında post oluşturabilir, güncelleyebilir ve silebilir.
+  - Postlara bir veya birden fazla resim eklenebilir.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **JWT Doğrulama**:
+  - Kullanıcılar API'yi kullanabilmek için JWT token kullanarak doğrulama yapmalıdır.
+  - Her API isteği için geçerli bir token gereklidir.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## API Rotaları
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Kullanıcılar
 
-## Laravel Sponsors
+#### 1. Kullanıcı Kaydı (Register)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**POST** `/api/register`
 
-### Premium Partners
+- `name`: Kullanıcı adı (string)
+- `email`: Kullanıcı e-posta (string)
+- `password`: Kullanıcı şifresi (string)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Cevap:  
+- **Başarı**: `201 Created` ve `user` verisi
+- **Hata**: `400 Bad Request` (Geçersiz veri)
 
-## Contributing
+#### 2. Kullanıcı Girişi (Login)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**POST** `/api/login`
 
-## Code of Conduct
+- `email`: Kullanıcı e-posta (string)
+- `password`: Kullanıcı şifresi (string)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Cevap:  
+- **Başarı**: `200 OK` ve `token` verisi (JWT)
+- **Hata**: `401 Unauthorized` (Yanlış e-posta veya şifre)
 
-## Security Vulnerabilities
+#### 3. Kullanıcı Bilgilerini Güncelleme
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**PUT** `/api/user/{id}`
 
-## License
+- `name`: Kullanıcı adı (string) 
+- `email`: Kullanıcı e-posta (string)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Cevap:  
+- **Başarı**: `200 OK` ve `user` verisi
+- **Hata**: `404 Not Found` (Kullanıcı bulunamadı)
+
+#### 4. Kullanıcı Silme
+
+**DELETE** `/api/user/{id}`
+
+Cevap:  
+- **Başarı**: `200 OK` ve `message`
+- **Hata**: `404 Not Found` (Kullanıcı bulunamadı)
+
+### Postlar
+
+#### 1. Tüm Postları Görüntüleme
+
+**GET** `/api/posts`
+
+Cevap:  
+- **Başarı**: `200 OK` ve `posts` listesi
+- **Hata**: `404 Not Found`
+
+#### 2. Post Oluşturma
+
+**POST** `/api/posts`
+
+- `title`: Post başlığı (string)
+- `content`: Post içeriği (string)
+- `images`: Posta ait resimlerin yolu (array)
+
+Cevap:  
+- **Başarı**: `201 Created` ve `post` verisi
+- **Hata**: `400 Bad Request`
+
+#### 3. Post Güncelleme
+
+**PUT** `/api/posts/{id}`
+
+- `title`: Post başlığı (string)
+- `content`: Post içeriği (string)
+- `images`: Posta ait resimlerin yolu (array)
+
+Cevap:  
+- **Başarı**: `200 OK` ve `post` verisi
+- **Hata**: `404 Not Found` (Post bulunamadı)
+
+#### 4. Post Silme
+
+**DELETE** `/api/posts/{id}`
+
+Cevap:  
+- **Başarı**: `200 OK` ve `message`
+- **Hata**: `404 Not Found` (Post bulunamadı)
+
+## Kurulum
+
+### Gereksinimler
+
+- PHP 8.2 veya üstü
+- Composer
+- Laravel 10.48
+- MySQL veya diğer veritabanları
+- Postman (API testleri için)
+
+### Kurulum Adımları
+
+1. Projeyi klonlayın:
+
+   git clone https://github.com/evcne/BlogRestAPI.git
+2.cd BlogRestAPI
+3.composer install
+4.cp .env.example .env
+5.Veritabanı ayarlarını .env dosyasına göre yapılandırın.
+6.php artisan migrate
+7.php artisan jwt:secret
+8.php artisan serve
+Uygulamanız http://127.0.0.1:8000 adresinde çalışmaya başlayacaktır.
+
+API Testleri
+Postman kullanarak API'nizi test edebilirsiniz. Projede geliştirdiğiniz API'leri test etmek için Postman'de gerekli istekleri yapabilirsiniz.
+
+Error Handling
+Bu proje, hata mesajlarını detaylı bir şekilde ele alır ve uygun HTTP status kodlarını döndürür. Hatalar için 400, 404, 500 gibi kodlar döndürülür ve her hata ile birlikte açıklayıcı bir mesaj gönderilir.
+
+License
+Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için LICENSE dosyasına bakın.
+
+### Açıklamalar:
+
+1. **Proje Özeti**: Laravel kullanarak geliştirilen bir API'nin temel özelliklerini tanımlar.
+2. **Kullanılan Teknolojiler**: Laravel, MySQL, PHP, JWT ve Postman gibi kullanılan tüm teknolojileri belirtir.
+3. **API Rotaları**: Kullanıcılar ve postlar için temel CRUD işlemleri hakkında bilgi verir.
+4. **Kurulum Adımları**: Projeyi kendi bilgisayarınızda çalıştırabilmek için gerekli adımları listeler.
+5. **Error Handling**: Hata yönetiminin nasıl çalıştığını belirtir.
+
+Bu README dosyasını, GitHub reposuna yükledikten sonra projenizin kullanımını ve yapısını daha iyi açıklamış olursunuz.
+
